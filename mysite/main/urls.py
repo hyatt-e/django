@@ -14,9 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
+# this allows the app to be dynamic. Code is easier to move around
+app_name = "main"
+
+# these tell django where to find web page templates/how to respond to requests
 urlpatterns = [
-    path('', include('main.urls')),
-    path('admin/', admin.site.urls),
+    path("", views.homepage, name="homepage"),
 ]
