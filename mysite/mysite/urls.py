@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-	# this passes the home url to the main.urls page
-    path('', include('main.urls')),
+    # this passes the home url to the main.urls page
     path('admin/', admin.site.urls),
+    path('', include('main.urls')),
+    path('tinymce/', include('tinymce.urls'))
 ]
