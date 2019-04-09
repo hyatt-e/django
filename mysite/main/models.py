@@ -7,5 +7,6 @@ class Tutorial(models.Model):
     tutorial_content = models.TextField()
     tutorial_published = models.DateTimeField("date published", default=datetime.now)
 
+    # converts objects to strings so they can be passed more easily to HTML
     def __str__(self):
         return self.tutorial_title
