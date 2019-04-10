@@ -23,4 +23,5 @@ app_name = "main"
 # these tell django where to find web page templates/how to respond to requests
 urlpatterns = [
     path("", views.homepage, name="homepage"),
+    path("register/", views.register, name="register"),
 ]
