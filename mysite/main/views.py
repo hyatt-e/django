@@ -1,18 +1,50 @@
 # render ...renders... an HTML page
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Tutorial
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from .models import Tutorial, TutorialSeries, TutorialCategory
 from .forms import NewUserForm
 
 
+def single_slug(request, single_slug):
+    # loop through TutorialCategory objects so we can match slugs
+    categories = [c.category_slug for c in TutorialCategory.objects.all()]
+    if single_slug in categories:
+        # find matching series by matching slugs
+        # __ after a forieng key points to an attribute of that foriegn key
+        matching_series = TutorialSeries.objects.filter(tutorial_category__category_slug=single_slug)
+        
+        series_urls = {}
+        for m in matching_series.all():
+            # .earliest() can be used since we used DateTime field 
+            part_one = Tutorial.objects.filter(tutorial_series__tutorial_series=m.tutorial_series).earliest("tutorial_published")
+            series_urls[m] = part_one.tutorial_slug
+
+        return render(request,
+                      "main/category.html",
+                      {"part_ones":series_urls})
+
+    tutorials = [t.tutorial_slug for t in Tutorial.objects.all()]
+    if single_slug in tutorials:
+        return HttpResponse(f"{single_slug} is a tutorial!!")
+    return HttpResponse(f"{single_slug} doesn't correspond to anything")
+
+
+# HttpResponse lets us respond to requests with html
+# def homepage(request):
+#     return render(request=request,
+#                   template_name="main/home.html",
+#                   context={"tutorials": Tutorial.objects.all}
+#                   )
 # HttpResponse lets us respond to requests with html
 def homepage(request):
     return render(request=request,
-                  template_name="main/home.html",
-                  context={"tutorials": Tutorial.objects.all}
+                  template_name="main/categories.html",
+                  # context allows us to pass things to be rendered
+                  # in this case we're passing objets from a model
+                  context={"categories": TutorialCategory.objects.all()}
                   )
 
 
