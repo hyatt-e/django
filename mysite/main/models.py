@@ -12,7 +12,7 @@ class TutorialCategory(models.Model):
         verbose_name_plural = "Categories"
 
     def __str__(self):
-        return self.tutorial_catergory
+        return self.tutorial_category
 
 
 class TutorialSeries(models.Model):
